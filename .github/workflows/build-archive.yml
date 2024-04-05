@@ -2,9 +2,9 @@ name: Xcode - Build Archive
 
 on:
   push:
-    branches: [ rootless ]
+    branches: [ master ]
   pull_request:
-    branches: [ rootless ]
+    branches: [ master ]
   workflow_dispatch:
 
 env:
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '12.4' # Adjusted for iOS 14 compatibility
+          xcode-version: 15.1
 
       - name: Checkout
         uses: actions/checkout@v3
