@@ -2,8 +2,10 @@ name: Xcode - Build Archive
 
 on:
   push:
-    tags:
-      - 'v2.*.*'
+    branches: [ rootless ]
+  pull_request:
+    branches: [ rootless ]
+  workflow_dispatch:
 
 env:
   MARKETING_VERSION: 0.0.0
@@ -18,7 +20,7 @@ jobs:
       - name: Setup Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 15.1
+          xcode-version: '12.4' # Adjusted for iOS 14 compatibility
 
       - name: Checkout
         uses: actions/checkout@v3
