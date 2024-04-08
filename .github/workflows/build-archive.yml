@@ -1,13 +1,14 @@
-name: Xcode - Build Archive
+name: Xcode - Build Archive (iOS 14)
 
 on:
   push:
-    tags:
-      - 'v2.*.*'
+    branches: [ "rootful" ]
+  pull_request:
+    branches: [ "rootful" ]
 
 env:
-  MARKETING_VERSION: 0.0.0
-  PATCH_VERSION: 0
+  MARKETING_VERSION: 1.4
+  PATCH_VERSION: 1
 
 jobs:
   build:
@@ -18,22 +19,14 @@ jobs:
       - name: Setup Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 15.1
+          xcode-version: 14.3.1
 
       - name: Checkout
         uses: actions/checkout@v3
-      
-      - name: Update version strings
-        run: |
-          export PATCH_VERSION=$(echo "${GITHUB_REF#refs/tags/v}" | cut -d. -f3)
-          echo "PATCH_VERSION=${PATCH_VERSION}" >> $GITHUB_ENV
-          echo "MARKETING_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-          xcrun agvtool new-version -all "${PATCH_VERSION}"
-          xcrun agvtool new-marketing-version "${GITHUB_REF#refs/tags/v}"
 
       - name: Build helper
         run: |
-          xcodebuild clean build archive -scheme ReveilHelper -project Reveil.xcodeproj -archivePath ReveilHelper.xcarchive CODE_SIGNING_ALLOWED=NO SKIP_INSTALL=NO | xcpretty && exit ${PIPESTATUS[0]}
+          xcodebuild clean build archive -scheme ReveilHelper -project Reveil.xcodeproj -archivePath ReveilHelper.xcarchive CODE_SIGNING_ALLOWED=NO
 
       - name: Build
         run: |
@@ -54,11 +47,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Reveil_${{ env.MARKETING_VERSION }}
-          path: Reveil.xcarchive
-
-      - name: Upload release
-        uses: softprops/action-gh-release@v1
-        with:
-          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
-          body_path: CHANGELOG.md
-          files: Reveil_${{ env.MARKETING_VERSION }}.tipa
+          path: |
+            Reveil.xcarchive
+            Reveil_${{ env.MARKETING_VERSION }}.tipa
