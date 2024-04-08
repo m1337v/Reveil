@@ -34,7 +34,7 @@ jobs:
 
       - name: Build helper
         run: |
-          xcodebuild clean build archive -scheme ReveilHelper -project Reveil.xcodeproj -archivePath ReveilHelper.xcarchive CODE_SIGNING_ALLOWED=NO && exit ${PIPESTATUS[0]}
+          xcodebuild clean build archive -scheme ReveilHelper -project Reveil.xcodeproj -archivePath ReveilHelper.xcarchive CODE_SIGNING_ALLOWED=NO
 
       - name: Build
         run: |
