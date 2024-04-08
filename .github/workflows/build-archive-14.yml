@@ -2,8 +2,9 @@ name: Xcode - Build Archive (iOS 14)
 
 on:
   push:
-    tags:
-      - 'v1.2.*'
+    branches: [ "backport" ]
+  pull_request:
+    branches: [ "backport" ]
 
 env:
   MARKETING_VERSION: 0.0.0
