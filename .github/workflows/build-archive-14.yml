@@ -52,5 +52,6 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
           name: backport
+          tag_name: backport
           body_path: CHANGELOG.md
           files: reveil14.tipa
