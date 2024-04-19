@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ "backport" ]
 
-env:
-  MARKETING_VERSION: 1.12.2
-  PATCH_VERSION: 1
-
 jobs:
   build:
     name: Build sideloading package for TrollStore
@@ -39,14 +35,22 @@ jobs:
           cd -
           cd Reveil.xcarchive/Products
           mv Applications Payload
-          zip -qr Reveil_${{ env.MARKETING_VERSION }}.tipa Payload
+          zip -qr reveil14.tipa Payload
           cd -
-          mv Reveil.xcarchive/Products/Reveil_${{ env.MARKETING_VERSION }}.tipa .
+          mv Reveil.xcarchive/Products/reveil14.tipa .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Reveil_${{ env.MARKETING_VERSION }}
+          name: reveil14
           path: |
             Reveil.xcarchive
-            Reveil_${{ env.MARKETING_VERSION }}.tipa
+            reveil14.tipa
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          name: backport
+          body_path: CHANGELOG.md
+          files: reveil14.tipa
