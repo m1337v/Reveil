@@ -21,13 +21,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build helper
+      - name: Build ReveilHelper
         run: |
-          xcodebuild clean build archive -scheme ReveilHelper -project Reveil.xcodeproj -archivePath ReveilHelper.xcarchive CODE_SIGNING_ALLOWED=NO
+          xcodebuild clean build archive \
+            -scheme ReveilHelper \
+            -project Reveil.xcodeproj \
+            -archivePath ReveilHelper.xcarchive \
+            CODE_SIGNING_ALLOWED=NO
 
-      - name: Build
+      - name: Build Reveil
         run: |
-          PATH=$PWD/ReveilHelper.xcarchive/Products/usr/local/bin:$PATH xcodebuild clean build archive -scheme Reveil -project Reveil.xcodeproj -sdk iphoneos -destination 'generic/platform=iOS' -archivePath Reveil CODE_SIGNING_ALLOWED=NO | xcpretty && exit ${PIPESTATUS[0]}
+          # Make sure ReveilHelper is in the PATH
+          export PATH=$PWD/ReveilHelper.xcarchive/Products/usr/local/bin:$PATH
+          
+          # Check if ReveilHelper is available
+          if ! command -v ReveilHelper &> /dev/null; then
+            echo "ReveilHelper could not be found"
+            exit 1
+          fi
+
+          # Build and archive Reveil
+          xcodebuild clean build archive \
+            -scheme Reveil \
+            -project Reveil.xcodeproj \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath Reveil \
+            CODE_SIGNING_ALLOWED=NO | xcpretty && exit ${PIPESTATUS[0]}
 
       - name: Package for sideloading
         run: |
