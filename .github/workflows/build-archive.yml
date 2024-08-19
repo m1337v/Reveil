@@ -26,7 +26,6 @@ jobs:
           xcodebuild clean build archive \
             -scheme ReveilHelper \
             -project Reveil.xcodeproj \
-            -sdk iphoneos \
             -archivePath ReveilHelper.xcarchive \
             CODE_SIGNING_ALLOWED=NO SKIP_INSTALL=NO | xcpretty && exit ${PIPESTATUS[0]}
 
