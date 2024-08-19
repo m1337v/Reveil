@@ -56,9 +56,9 @@ jobs:
           cd -
           cd Reveil.xcarchive/Products
           mv Applications Payload
-          zip -qr reveil.tipa Payload
+          zip -qr reveil15.tipa Payload
           cd -
-          mv Reveil.xcarchive/Products/reveil.tipa .
+          mv Reveil.xcarchive/Products/reveil15.tipa .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -66,12 +66,17 @@ jobs:
           name: reveil
           path: |
             Reveil.xcarchive
-            reveil.tipa
+            reveil15.tipa
             
       - name: Upload release
         uses: softprops/action-gh-release@v1
+        if: success()
         with:
-          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          files: reveil15.tipa
+          tag_name: rootless
           name: rootless
-          body_path: CHANGELOG.md
-          files: reveil.tipa
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
